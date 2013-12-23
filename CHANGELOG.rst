@@ -5,6 +5,9 @@ These are notable changes in edx-platform.  This is a rolling list of changes,
 in roughly chronological order, most recent first.  Add your entries at or near
 the top.  Include a label indicating the component affected.
 
+Blades: Change the download video field to a dropdown that will allow students
+to download the first source listed in the alternate sources. BLD-364.
+
 Blades: Video player start-end time range is now shown even before Play is
 clicked. Video player VCR time shows correct non-zero total time for YouTube
 videos even before Play is clicked. BLD-529.
