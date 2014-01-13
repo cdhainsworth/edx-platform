@@ -5,6 +5,8 @@ These are notable changes in edx-platform.  This is a rolling list of changes,
 in roughly chronological order, most recent first.  Add your entries at or near
 the top.  Include a label indicating the component affected.
 
+Blades: Allow user with BetaTester role correctly use LTI. BLD-641.
+
 Blades: Fix comparison of float numbers. BLD-434.
 
 Blades: Allow regexp strings as the correct answer to a string response question. BLD-475.
