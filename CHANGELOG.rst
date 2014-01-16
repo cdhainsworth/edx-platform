@@ -5,6 +5,8 @@ These are notable changes in edx-platform.  This is a rolling list of changes,
 in roughly chronological order, most recent first.  Add your entries at or near
 the top.  Include a label indicating the component affected.
 
+Studio: Add ability to duplicate components on the unit page.
+
 Blades: Adds CookieStorage utility for video player that provides convenient
   way to work with cookies.
 
