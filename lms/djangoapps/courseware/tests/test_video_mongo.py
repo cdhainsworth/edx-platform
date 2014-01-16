@@ -9,7 +9,7 @@ from xmodule.video_module import _create_youtube_string
 
 class TestVideo(BaseTestXmodule):
     """Integration tests: web client + mongo."""
-
+    maxDiff=None
     CATEGORY = "video"
     DATA = SOURCE_XML
 
@@ -42,6 +42,7 @@ class TestVideo(BaseTestXmodule):
         }
 
         expected_context = {
+            'ajax_url': self.item_descriptor.xmodule_runtime.ajax_url + '/save_user_state',
             'data_dir': getattr(self, 'data_dir', None),
             'caption_asset_path': '/static/subs/',
             'show_captions': 'true',
@@ -49,6 +50,7 @@ class TestVideo(BaseTestXmodule):
             'end': 3610.0,
             'id': self.item_module.location.html_id(),
             'sources': sources,
+            'speed': 1.0,
             'start': 3603.0,
             'sub': u'a_sub_file.srt.sjson',
             'track': '',
@@ -94,8 +96,8 @@ class TestVideoNonYouTube(TestVideo):
         }
 
         context = self.item_module.render('student_view').content
-
         expected_context = {
+            'ajax_url': self.item_descriptor.xmodule_runtime.ajax_url + '/save_user_state',
             'data_dir': getattr(self, 'data_dir', None),
             'caption_asset_path': '/static/subs/',
             'show_captions': 'true',
@@ -103,6 +105,7 @@ class TestVideoNonYouTube(TestVideo):
             'end': 3610.0,
             'id': self.item_module.location.html_id(),
             'sources': sources,
+            'speed': 1.0,
             'start': 3603.0,
             'sub': u'a_sub_file.srt.sjson',
             'track': '',

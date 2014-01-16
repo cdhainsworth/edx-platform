@@ -33,7 +33,7 @@
           li = secondaryControls.find('.video_speeds li');
           expect(secondaryControls).toContain('.speeds');
           expect(secondaryControls).toContain('.video_speeds');
-          expect(secondaryControls.find('p.active').text()).toBe('1.0x');
+          expect(secondaryControls.find('p.active').text()).toBe('1.50x');
           expect(li.filter('.active')).toHaveData('speed', videoSpeedControl.currentSpeed);
           expect(li.length).toBe(videoSpeedControl.speeds.length);
           $.each(li.toArray().reverse(), function(index, link) {

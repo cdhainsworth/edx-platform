@@ -71,6 +71,9 @@ jasmine.stubbedMetadata =
   'cogebirgzzM':
     id: 'cogebirgzzM'
     duration: 200
+  'abcdefghijkl':
+    id: 'abcdefghijkl'
+    duration: 400
   bogus:
     duration: 100
 
@@ -120,6 +123,8 @@ jasmine.stubRequests = ->
       settings.url.match(/event$/) ||
       settings.url.match(/.+\/problem_(check|reset|show|save)$/)
       # do nothing
+    else if settings.url == '/save_user_state'
+      return {success: true}
     else
       throw "External request attempted for #{settings.url}, which is not defined."
 
@@ -128,7 +133,7 @@ jasmine.stubYoutubePlayer = ->
     obj = jasmine.createSpyObj 'YT.Player', ['cueVideoById', 'getVideoEmbedCode',
     'getCurrentTime', 'getPlayerState', 'getVolume', 'setVolume', 'loadVideoById',
     'playVideo', 'pauseVideo', 'seekTo', 'getDuration', 'getAvailablePlaybackRates', 'setPlaybackRate']
-    obj['getAvailablePlaybackRates'] = jasmine.createSpy('getAvailablePlaybackRates').andReturn [0.75, 1.0, 1.25, 1.5]
+    obj['getAvailablePlaybackRates'] = jasmine.createSpy('getAvailablePlaybackRates').andReturn ['0.5', '1.0', '1.5', '2.0']
     obj
 
 jasmine.stubVideoPlayer = (context, enableParts, html5=false) ->
