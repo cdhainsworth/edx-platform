@@ -862,6 +862,7 @@ class NumericalResponse(LoncapaResponse):
             self.inclusion = (True if answer.startswith('[') else False,
                                       True  if answer.endswith(']') else False)
             self.answer_range = [contextualize_text(x, context) for x in answer[1:-1].split(',')]
+            self.correct_answer = answer[0] + self.answer_range[0] +', ' + self.answer_range[1] + answer[-1]
         else:
             self.correct_answer = contextualize_text(answer, context)
 
