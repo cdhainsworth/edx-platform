@@ -904,19 +904,6 @@ class NumericalResponse(LoncapaResponse):
         """
         student_answer = student_answers[self.answer_id]
 
-        if self.range_tolerance:
-            boundaries = []
-            for answer in self.answers_range:
-                boundary = self.get_staff_ans(answer)
-                if boundary.imag != 0:
-                    log.debug("Content error--answer '%s' is complex and can't be used in range tolerance problem", answer)
-                    raise StudentInputError(
-                        "There was a problem with the staff answer to this problem"
-                    )
-                boundaries.append(boundary.real)
-        else:
-            correct_float = self.get_staff_ans(self.correct_answer)
-
         _ = self.capa_system.i18n.ugettext
         general_exception = StudentInputError(
             _(u"Could not interpret '{student_answer}' as a number.").format(student_answer=cgi.escape(student_answer))
