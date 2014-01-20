@@ -899,9 +899,9 @@ class NumericalResponse(LoncapaResponse):
         return correct_ans
 
     def get_score(self, student_answers):
-        '''
+        """
         Grade a numeric response.
-        '''
+        """
         student_answer = student_answers[self.answer_id]
 
         if self.range_tolerance:

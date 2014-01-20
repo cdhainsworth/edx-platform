@@ -8,7 +8,7 @@ default_tolerance = '0.001%'
 
 
 def compare_with_tolerance(complex1, complex2, tolerance=default_tolerance, relative_tolerance=False):
-    '''
+    """
     Compare complex1 to complex2 with maximum tolerance tol.
 
     tol is relative if it ends in %; otherwise, it is absolute.
@@ -28,7 +28,7 @@ def compare_with_tolerance(complex1, complex2, tolerance=default_tolerance, rela
         Out[183]: -3.3881317890172014e-21
         In [212]: 1.9e24 - 1.9*10**24
         Out[212]: 268435456.0
-    '''
+    """
     if relative_tolerance:
         tolerance = tolerance * max(abs(complex1), abs(complex2))
     elif tolerance.endswith('%'):
