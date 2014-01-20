@@ -27,6 +27,8 @@ import textwrap
 import traceback
 import xml.sax.saxutils as saxutils
 import operator
+from cmath import isnan
+from sys import float_info
 
 from collections import namedtuple
 from shapely.geometry import Point, MultiPoint
@@ -845,7 +847,6 @@ class NumericalResponse(LoncapaResponse):
     max_inputfields = 1
 
     def __init__(self, *args, **kwargs):
-        self.answer = ''
         self.correct_answer = ''
         self.tolerance = default_tolerance
         self.range_tolerance = False
@@ -858,9 +859,9 @@ class NumericalResponse(LoncapaResponse):
 
         if answer.startswith(('[', '(')) and answer.endswith((']', ')')):  # range tolerance case
             self.range_tolerance = True
-            self.operators = (operator.ge if answer.startswith('[') else operator.gt,
-                                    operator.le  if answer.endswith(']') else operator.lt)
-            self.answers_range = [contextualize_text(x, context) for x in answer[1:-1].split(',')]
+            self.inclusion = (True if answer.startswith('[') else False,
+                                      True  if answer.endswith(']') else False)
+            self.answer_range = [contextualize_text(x, context) for x in answer[1:-1].split(',')]
         else:
             self.correct_answer = contextualize_text(answer, context)
 
@@ -898,7 +899,9 @@ class NumericalResponse(LoncapaResponse):
         return correct_ans
 
     def get_score(self, student_answers):
-        """Grade a numeric response"""
+        '''
+        Grade a numeric response.
+        '''
         student_answer = student_answers[self.answer_id]
 
         if self.range_tolerance:
@@ -946,13 +949,34 @@ class NumericalResponse(LoncapaResponse):
         except Exception:
             raise general_exception
         # End `evaluator` block -- we figured out the student's answer!
-        # import ipdb; ipdb.set_trace()
+
         if self.range_tolerance:
             if isinstance(student_float, complex):
                 raise StudentInputError(u"You may not use complex numbers in range tolerance problems")
-            import ipdb; ipdb.set_trace()
-            correct = all([op(student_float, boundary) for op, boundary in zip(self.operators, boundaries)])
+            if isnan(student_float):
+                raise general_exception
+            boundaries = []
+            for inclusion, answer in zip(self.inclusion, self.answer_range):
+                boundary = self.get_staff_ans(answer)
+                if boundary.imag != 0:
+                    log.debug(
+                        "Content error--answer '%s' is complex and can't be used in range tolerance problem",
+                        answer
+                    )
+                    raise StudentInputError("There was a problem with the staff answer to this problem")
+                boundaries.append(boundary.real)
+                if compare_with_tolerance(
+                        student_float,
+                        boundary,
+                        tolerance=float_info.epsilon,
+                        relative_tolerance=True
+                ):
+                    correct = inclusion
+                    break
+            else:
+                correct = boundaries[0] < student_float < boundaries[1]
         else:
+            correct_float = self.get_staff_ans(self.correct_answer)
             correct = compare_with_tolerance(
                 student_float, correct_float, self.tolerance
             )
