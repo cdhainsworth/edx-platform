@@ -11,7 +11,7 @@ def compare_with_tolerance(complex1, complex2, tolerance=default_tolerance, rela
     """
     Compare complex1 to complex2 with maximum tolerance tol.
 
-    tol is relative if it ends in %; otherwise, it is absolute.
+    If tolerance is type string, then it is counted as relative if it ends in %; otherwise, it is absolute.
 
      - complex1    :  student result (float complex number)
      - complex2    :  instructor result (float complex number)
