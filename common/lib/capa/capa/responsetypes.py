@@ -26,7 +26,6 @@ import subprocess
 import textwrap
 import traceback
 import xml.sax.saxutils as saxutils
-import operator
 from cmath import isnan
 from sys import float_info
 
