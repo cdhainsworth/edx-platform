@@ -51,23 +51,23 @@ Create a Checkbox Problem
 #. Under **Add New Component**, click **Problem**.
 #. In the **Select Problem Component Type** screen, click **Checkboxes** on the **Common Problem Types** tab.
 #. In the Problem component that appears, click **Edit**.
-#. In the component editor, replace the default text with the text of your 
+#. In the component editor, replace the default text with the text of your
    problem. Enter each answer option on its own line.
-#. Select all the answer options, and then click the checkbox button. 
+#. Select all the answer options, and then click the checkbox button.
 
    .. image:: Images/ProbComponent_CheckboxIcon.gif
     :alt: Image of the checkbox button
-   
+
    When you do this, brackets appear next to each answer choice.
 
 #. Add an **x** between the brackets for the correct answer or answers.
-#. In the component editor, select the text of the explanation, and then click the 
+#. In the component editor, select the text of the explanation, and then click the
    explanation button to add explanation tags around the text.
 
    .. image:: Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
-#. On the **Settings** tab, specify the settings that you want. 
+#. On the **Settings** tab, specify the settings that you want.
 #. Click **Save**.
 
 For the example problem above, the text in the Problem component is the
@@ -75,22 +75,22 @@ following.
 
 ::
 
-    Learning about the benefits of preventative healthcare can be particularly 
+    Learning about the benefits of preventative healthcare can be particularly
     difficult. Check all of the reasons below why this may be the case.
 
-    [x] A large amount of time passes between undertaking a preventative measure 
-    and seeing the result. 
-    [ ] Non-immunized people will always fall sick. 
-    [x] If others are immunized, fewer people will fall sick regardless of a 
-    particular individual's choice to get immunized or not. 
-    [x] Trust in healthcare professionals and government officials is fragile. 
+    [x] A large amount of time passes between undertaking a preventative measure
+    and seeing the result.
+    [ ] Non-immunized people will always fall sick.
+    [x] If others are immunized, fewer people will fall sick regardless of a
+    particular individual's choice to get immunized or not.
+    [x] Trust in healthcare professionals and government officials is fragile.
 
     [explanation]
-    People who are not immunized against a disease may still not fall sick from 
-    the disease. If someone is trying to learn whether or not preventative measures 
-    against the disease have any impact, he or she may see these people and conclude, 
-    since they have remained healthy despite not being immunized, that immunizations 
-    have no effect. Consequently, he or she would tend to believe that immunization 
+    People who are not immunized against a disease may still not fall sick from
+    the disease. If someone is trying to learn whether or not preventative measures
+    against the disease have any impact, he or she may see these people and conclude,
+    since they have remained healthy despite not being immunized, that immunizations
+    have no effect. Consequently, he or she would tend to believe that immunization
     (or other preventative measures) have fewer benefits than they actually do.
     [explanation]
 
@@ -120,24 +120,24 @@ To create a dropdown problem, follow these steps.
 #. In the **Select Problem Component Type** screen, click
    **Dropdown** on the **Common Problem Types** tab.
 #. In the new Problem component that appears, click **Edit**.
-#. Replace the default text with the text for your problem. Enter each of the possible 
+#. Replace the default text with the text for your problem. Enter each of the possible
    answers on the same line, separated by commas.
-#. Select all the answer options, and then click the dropdown button. 
-      
+#. Select all the answer options, and then click the dropdown button.
+
    .. image:: Images/ProbCompButton_Dropdown.gif
     :alt: Image of the dropdown button
-      
-   When you do this, a double set of brackets ([[ ]]) appears and surrounds the 
+
+   When you do this, a double set of brackets ([[ ]]) appears and surrounds the
    answer options.
-      
+
 #. Inside the brackets, surround the correct answer with parentheses.
-#. In the component editor, select the text of the explanation, and then click the 
+#. In the component editor, select the text of the explanation, and then click the
    explanation button to add explanation tags around the text.
 
    .. image:: Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
-#. On the **Settings** tab, specify the settings that you want. 
+#. On the **Settings** tab, specify the settings that you want.
 #. Click **Save**.
 
 For the example problem above, the text in the Problem component is the
@@ -178,25 +178,25 @@ Create a Multiple Choice Problem
 #. In the **Select Problem Component Type** screen, click **Multiple
    Choice** on the **Common Problem Types** tab.
 #. When the new Problem component appears, click **Edit**.
-#. In the component editor, replace the sample problem text with the text of your 
+#. In the component editor, replace the sample problem text with the text of your
    problem. Enter each answer option on its own line.
-#. Select all the answer options, and then click the multiple choice button. 
-   
+#. Select all the answer options, and then click the multiple choice button.
+
    .. image:: Images/ProbCompButton_MultChoice.gif
     :alt: Image of the multiple choice button
-   
-   When you do this, the component editor adds a pair of parentheses next to each 
+
+   When you do this, the component editor adds a pair of parentheses next to each
    possible answer.
-   
+
 #. Add an "x" between the parentheses next to the correct answer.
-   
-#. In the component editor, select the text of the explanation, and then click the 
+
+#. In the component editor, select the text of the explanation, and then click the
    explanation button to add explanation tags around the text.
 
    .. image:: Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
-#. On the **Settings** tab, specify the settings that you want. 
+#. On the **Settings** tab, specify the settings that you want.
 #. Click **Save**.
 
 For the example problem above, the text in the Problem component is the
@@ -206,22 +206,22 @@ following.
 
     Lateral inhibition, as was first discovered in the horsehoe crab:
 
-    ( ) is a property of touch sensation, referring to the ability of crabs to 
+    ( ) is a property of touch sensation, referring to the ability of crabs to
     detect nearby predators.
-    ( ) is a property of hearing, referring to the ability of crabs to detect 
+    ( ) is a property of hearing, referring to the ability of crabs to detect
     low frequency noises.
-    (x) is a property of vision, referring to the ability of crabs eyes to 
+    (x) is a property of vision, referring to the ability of crabs eyes to
     enhance contrasts.
-    ( ) has to do with the ability of crabs to use sonar to detect fellow horseshoe 
+    ( ) has to do with the ability of crabs to use sonar to detect fellow horseshoe
     crabs nearby.
-    ( ) has to do with a weighting system in the crabs skeleton that allows it to 
+    ( ) has to do with a weighting system in the crabs skeleton that allows it to
     balance in turbulent water.
 
     [Explanation]
-    Horseshoe crabs were essential to the discovery of lateral inhibition, a property of 
-    vision present in horseshoe crabs as well as humans, that enables enhancement of 
-    contrast at edges of objects as was demonstrated in class. In 1967, Haldan Hartline 
-    received the Nobel prize for his research on vision and in particular his research 
+    Horseshoe crabs were essential to the discovery of lateral inhibition, a property of
+    vision present in horseshoe crabs as well as humans, that enables enhancement of
+    contrast at edges of objects as was demonstrated in class. In 1967, Haldan Hartline
+    received the Nobel prize for his research on vision and in particular his research
     investigating lateral inhibition using horseshoe crabs.
     [Explanation]
 
@@ -232,12 +232,12 @@ Numerical Input
 *******************
 
 In numerical input problems, students enter numbers or specific and
-relatively simple mathematical expressions to answer a question. 
+relatively simple mathematical expressions to answer a question.
 
 .. image:: Images/NumericalInputExample.gif
  :alt: Image of a numerical input problem
 
-Note that students' responses don't have to be exact for these problems. You can 
+Note that students' responses don't have to be exact for these problems. You can
 specify a margin of error, or tolerance. For more information, see the instructions below.
 
 Responses for numerical input problems can include integers, fractions,
@@ -262,26 +262,29 @@ Create a Numerical Input Problem
 #. When the new Problem component appears, click **Edit**.
 #. In the component editor, replace the sample problem text with your own text.
 
-#. Select the text of the answer, and then click the numerical input button. 
+#. Select the text of the answer, and then click the numerical input button.
 
    .. image:: Images/ProbCompButton_NumInput.gif
     :alt: Image of the numerical input button
-   
-   When you do this, an equal sign appears next to the answer.
-        
-#. (Optional) If you want to include a margin of error, or tolerance, add **+-NUMBER** after the answer. 
-   
-   You can add a percentage or number.  
-   For example, if you want to include a 2% tolerance, add **+-2%**. To add
-   a tolerance of 5, add **+-5**.
 
-#. In the component editor, select the text of the explanation, and then click the 
+   When you do this, an equal sign appears next to the answer.
+
+#. (Optional) If you want to include a margin of error, or tolerance, **a)** add **+-NUMBER** after the answer or **b)** set answer in form `[left boundary, right boundary)` .
+
+   a. You can add a percentage or number.
+      For example, if you want to include a 2% tolerance, add **+-2%**. To add
+      a tolerance of 5, add **+-5**.
+
+   b. You can set answer as a range, for example [5, 7). `[` or `]` means inclusion of boundary, `(` or `)` otherwise.
+      In this example 5 and everything between 5 and 7 is correct answer, but 7 is incorrect.
+
+#. In the component editor, select the text of the explanation, and then click the
    explanation button to add explanation tags around the text.
 
    .. image:: Images/ProbCompButton_Explanation.gif
     :alt: Image of athe explanation button
 
-#. On the **Settings** tab, specify the settings that you want. 
+#. On the **Settings** tab, specify the settings that you want.
 #. Click **Save**.
 
 For the example problem above, the text in the Problem component is the
@@ -292,7 +295,7 @@ following.
    How many different countries do edX students live in as of May 2013?
 
    = 193 +- 5%
-    
+
    [explanation]
    As of edX's first birthday, in May 2013, edX students live in 193 different countries.
    [explanation]
@@ -311,7 +314,7 @@ text that students enter.
 .. image:: Images/Math4.gif
  :alt: Image of a numerical input probem rendered by Studio
 
-For more information, see `Formula Equation Input 
+For more information, see `Formula Equation Input
 <https://edx.readthedocs.org/en/latest/course_data_formats/formula_equation_input.html>`_.
 
 .. _Text input:
@@ -341,21 +344,21 @@ To create a text input problem, follow these steps.
    on the **Common Problem Types** tab.
 #. In the new Problem component that appears, click **Edit**.
 #. Replace the default text with the text for your problem.
-#. Select the text of the answer, and then click the text input button. 
-   
+#. Select the text of the answer, and then click the text input button.
+
    .. image:: Images/ProbCompButton_TextInput.gif
     :alt: Image of the text input button
-   
+
    When you do this, an equal sign appears next to the answer.
-  
-   
-#. In the component editor, select the text of the explanation, and then click the 
+
+
+#. In the component editor, select the text of the explanation, and then click the
    explanation button to add explanation tags around the text.
 
    .. image:: Images/ProbCompButton_Explanation.gif
     :alt: Image of the explanation button
 
-#. On the **Settings** tab, specify the settings that you want. 
+#. On the **Settings** tab, specify the settings that you want.
 #. Click **Save**.
 
 For the example problem above, the text in the Problem component is the
@@ -363,24 +366,24 @@ following.
 
 ::
 
-    What is the technical term that refers to the fact that, when enough people 
+    What is the technical term that refers to the fact that, when enough people
     sleep under a bednet, the disease may altogether disappear?
     = herd immunity
 
     [explanation]
-    The correct answer is herd immunity. As more and more people use bednets, 
-    the risk of malaria begins to fall for everyone – users and non-users alike. 
-    This can fall to such a low probability that malaria is effectively eradicated 
+    The correct answer is herd immunity. As more and more people use bednets,
+    the risk of malaria begins to fall for everyone – users and non-users alike.
+    This can fall to such a low probability that malaria is effectively eradicated
     from the group (even when the group does not have 100% bednet coverage).
     [explanation]
-    
+
 =========================================
 Multiple Responses in Text Input Problems
 =========================================
 
-You can specify more than one correct response for text input problems. 
-For example, instead of requiring students to enter exactly "Dr. Martin Luther 
-King, Junior," you can allow answers of "Martin Luther King," "Doctor Martin 
+You can specify more than one correct response for text input problems.
+For example, instead of requiring students to enter exactly "Dr. Martin Luther
+King, Junior," you can allow answers of "Martin Luther King," "Doctor Martin
 Luther King," and other variations.
 
 To do this, include "or=" (without the quotation marks) before each additional
@@ -398,7 +401,7 @@ and require a case sensitive answer.
 
 To make a text input response case sensitive, you must use the :ref:`Advanced Editor`.
 
-In the advanced editor, you see that the **type** attribute of the **stringresponse** 
+In the advanced editor, you see that the **type** attribute of the **stringresponse**
 element equals **ci**, for *case insensitive*. For example:
 
 ::
@@ -414,19 +417,19 @@ To make the response case sensitive, change the value of the **type** attribute 
     <stringresponse answer="Michigan" type="cs">
       <textline size="20"/>
     </stringresponse>
-    
+
 =============================================
 Response Field Length of Text Input Problems
 =============================================
 
-By default, the response field for text input problems is 20 characters long. 
+By default, the response field for text input problems is 20 characters long.
 
 You should preview the unit to ensure that the length of the response input field
 accommodates the correct answer, and provides extra space for possible incorrect answers.
 
 If the default response field length is not sufficient, you can change it using the :ref:`Advanced Editor`.
 
-In the advanced editor, in the XML block for the answer, you see that the **size** attribute of the **textline** 
+In the advanced editor, in the XML block for the answer, you see that the **size** attribute of the **textline**
 element equals **20**:
 
 ::
