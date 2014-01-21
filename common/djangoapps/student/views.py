@@ -392,7 +392,14 @@ def dashboard(request):
     prompt_midcourse_reverify = False
     reverify_course_data = []
     for (course, enrollment) in course_enrollment_pairs:
-        if MidcourseReverificationWindow.window_open_for_course(course.id) and not SoftwareSecurePhotoVerification.user_has_valid_or_pending(user, course_id=course.id):
+        # IF the reverification window is open
+        # AND the user doesn't have a pending reverification for that window
+        # AND the user is actually verified-enrolled in the course
+        if (
+            MidcourseReverificationWindow.window_open_for_course(course.id)
+            and not SoftwareSecurePhotoVerification.user_has_valid_or_pending(user, course_id=course.id)
+            and enrollment.mode == "verified"
+        ):
             window = MidcourseReverificationWindow.get_window(course.id, datetime.datetime.now(UTC))
             status_for_window = SoftwareSecurePhotoVerification.user_status(user, course_id=window.course_id)
             reverify_course_data.append(
