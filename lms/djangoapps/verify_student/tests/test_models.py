@@ -482,14 +482,37 @@ class TestSSPMidcourseReverification(TestCase):
         attempt3.save()
 
         # should now return True because all windows have approved verifications
-        from nose.tools import set_trace; set_trace()
         self.assertTrue(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
 
     def test_original_verification(self):
-        pass
+        course_id = "MITx/999/Robot_Super_Course"
+        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
+        user = UserFactory.create()
+        orig_attempt = SoftwareSecurePhotoVerification(user=user)
+        orig_attempt.save()
+        window = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.UTC) - timedelta(days=15),
+            end_date=datetime.now(pytz.UTC) - timedelta(days=13),
+        )
+        window.save()
+        midcourse_attempt = SSPMidcourseReverification(user=user, window=window)
+        self.assertEquals(midcourse_attempt.original_verification(), orig_attempt)
 
     def test_generate_original_s3_key(self):
-        pass
+        course_id = "MITx/999/Robot_Super_Course"
+        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
+        user = UserFactory.create()
+        orig_attempt = SoftwareSecurePhotoVerification(user=user)
+        orig_attempt.save()
+        window = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.UTC) - timedelta(days=15),
+            end_date=datetime.now(pytz.UTC) - timedelta(days=13),
+        )
+        window.save()
+        midcourse_attempt = SSPMidcourseReverification(user=user, window=window)
+        self.assertEquals(orig_attempt._generate_s3_key("test").key, midcourse_attempt._generate_original_s3_key("test").key)
 
     def test_fetch_photo_id_image(self):
         pass
@@ -510,6 +533,24 @@ class TestSSPMidcourseReverification(TestCase):
         pass
 
     def test_user_has_valid_or_pending(self):
+        course_id = "MITx/999/Robot_Super_Course"
+        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
+        user = UserFactory.create()
+        window = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.UTC) - timedelta(days=15),
+            end_date=datetime.now(pytz.UTC) - timedelta(days=13),
+        )
+        window.save()
+
+        attempt = SSPMidcourseReverification(status="must_retry", user=user, window=window)
+        attempt.save()
+
+        assert_false(SSPMidcourseReverification.user_has_valid_or_pending(user=user, course_id=course_id))
+        
+        attempt.status="approved"
+        attempt.save()
+        assert_true(SSPMidcourseReverification.user_has_valid_or_pending(user=user, course_id=course_id))
         pass
 
     def test_active_for_user(self):

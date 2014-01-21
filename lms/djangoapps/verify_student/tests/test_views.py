@@ -167,15 +167,3 @@ class TestMidCourseReverifyView(TestCase):
         self.assertEquals(response.status_code, 200)
         ((_template, context), _kwargs) = render_mock.call_args
         self.assertFalse(context['error'])
-
-    @patch('verify_student.views.render_to_response', render_mock)
-    def test_midcourse_reverify_post_failure(self):
-        url = reverse('verify_student_midcourse_reverify',
-                      kwargs={"course_id": self.course_id})
-        response = self.client.post(url, {'face_image': '',
-                                          'photo_id_image': ''})
-        self.assertEquals(response.status_code, 200)
-        ((template, context), _kwargs) = render_mock.call_args
-        self.assertIn('photo_reverification', template)
-        self.assertTrue(context['error'])
-

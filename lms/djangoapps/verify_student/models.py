@@ -796,7 +796,10 @@ class SSPMidcourseReverification(SoftwareSecurePhotoVerification):
         """
         Returns the most current SoftwareSecurePhotoVerification object associated with the user. 
         """
-        return (SoftwareSecurePhotoVerification.objects.get(user=self.user))
+        query = SoftwareSecurePhotoVerification.objects.filter(user=self.user)
+        for item in query:
+            if not isinstance(item, SSPMidcourseReverification):
+                return item
 
     # TODO could just call original_verification's _generate_s3_key?
     def _generate_original_s3_key(self, prefix):
