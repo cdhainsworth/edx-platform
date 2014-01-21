@@ -1062,10 +1062,9 @@ class NumericalResponseTest(ResponseTest):
     # unit testing the NumericalResponse (mocking out the evaluator)
     # For simple things its not worth the effort.
 
-
     def test_grade_range_tolerance(self):
         problem_setup = [
-          #[given_asnwer, [list of correct responses], [list of incorrect responses]]
+            # [given_asnwer, [list of correct responses], [list of incorrect responses]]
             ['[5, 7)', ['5', '6', '6.999'], ['4.999', '7']],
             ['[1.6e-5, 1.9e24)', ['0.000016', '1.6*10^-5', '1.59e24'], ['1.59e-5', '1.9e24', '1.9*10^24']],
             ['[0, 1.6e-5]', ['1.6*10^-5'], ["2"]],
@@ -1116,17 +1115,17 @@ class NumericalResponseTest(ResponseTest):
         Default tolerance for all responsetypes is 1e-3%.
         """
         problem_setup = [
-          #[given_answer, [list of correct responses], [list of incorrect responses]]
-            [1, ["1"], ["1.1"],],
-            [2.0, ["2.0"], ["1.0"],],
-            [4, ["4.0", "4.00004"],  ["4.00005"]],
+            # [given_answer, [list of correct responses], [list of incorrect responses]]
+            [1, ["1"], ["1.1"]],
+            [2.0, ["2.0"], ["1.0"]],
+            [4, ["4.0", "4.00004"], ["4.00005"]],
             [0.00016, ["1.6*10^-4"], [""]],
             [0.000016, ["1.6*10^-5"], ["0.000165"]],
             [1.9e24, ["1.9*10^24"], ["1.9001*10^24"]],
             [2e-15, ["2*10^-15"], [""]],
             [3141592653589793238., ["3141592653589793115."], [""]],
-            [0.1234567,  ["0.123456", "0.1234561"], ["0.123451"]],
-            [1e-5,  ["1e-5", "1.0e-5"], ["-1e-5", "2*1e-5"]],
+            [0.1234567, ["0.123456", "0.1234561"], ["0.123451"]],
+            [1e-5, ["1e-5", "1.0e-5"], ["-1e-5", "2*1e-5"]],
         ]
         for given_answer, correct_responses, incorrect_responses in problem_setup:
             problem = self.build_problem(answer=given_answer)

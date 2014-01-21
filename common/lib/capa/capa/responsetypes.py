@@ -38,8 +38,10 @@ from . import correctmap
 from .registry import TagRegistry
 from datetime import datetime
 from pytz import UTC
-from .util import (compare_with_tolerance, contextualize_text,  convert_files_to_filenames,
-                           is_list_of_files, find_with_default, default_tolerance)
+from .util import (
+    compare_with_tolerance, contextualize_text, convert_files_to_filenames,
+    is_list_of_files, find_with_default, default_tolerance
+)
 from lxml import etree
 from lxml.html.soupparser import fromstring as fromstring_bs     # uses Beautiful Soup!!! FIXME?
 import capa.xqueue_interface as xqueue_interface
@@ -849,19 +851,21 @@ class NumericalResponse(LoncapaResponse):
         self.correct_answer = ''
         self.tolerance = default_tolerance
         self.range_tolerance = False
+        self.answer_range = self.inclusion = None
         super(NumericalResponse, self).__init__(*args, **kwargs)
 
     def setup_response(self):
         xml = self.xml
         context = self.context
-        answer  = xml.get('answer')
+        answer = xml.get('answer')
 
         if answer.startswith(('[', '(')) and answer.endswith((']', ')')):  # range tolerance case
             self.range_tolerance = True
-            self.inclusion = (True if answer.startswith('[') else False,
-                                      True  if answer.endswith(']') else False)
+            self.inclusion = (
+                True if answer.startswith('[') else False, True if answer.endswith(']') else False
+            )
             self.answer_range = [contextualize_text(x, context) for x in answer[1:-1].split(',')]
-            self.correct_answer = answer[0] + self.answer_range[0] +', ' + self.answer_range[1] + answer[-1]
+            self.correct_answer = answer[0] + self.answer_range[0] + ', ' + self.answer_range[1] + answer[-1]
         else:
             self.correct_answer = contextualize_text(answer, context)
 
@@ -872,7 +876,6 @@ class NumericalResponse(LoncapaResponse):
             )
             if tolerance_xml:  # If it isn't an empty list...
                 self.tolerance = contextualize_text(tolerance_xml[0], context)
-
 
     def get_staff_ans(self, answer):
         """
@@ -1101,7 +1104,7 @@ class StringResponse(LoncapaResponse):
         if self.regexp:  # regexp match
             flags = re.IGNORECASE if self.case_insensitive else 0
             try:
-                regexp = re.compile('^'+ '|'.join(expected) + '$', flags=flags | re.UNICODE)
+                regexp = re.compile('^' + '|'.join(expected) + '$', flags=flags | re.UNICODE)
                 result = re.search(regexp, given)
             except Exception as err:
                 msg = '[courseware.capa.responsetypes.stringresponse] error: {}'.format(err.message)
@@ -1113,7 +1116,6 @@ class StringResponse(LoncapaResponse):
                 return given.lower() in [i.lower() for i in expected]
             else:
                 return given in expected
-
 
     def check_hint_condition(self, hxml_set, student_answers):
         given = student_answers[self.answer_id].strip()
