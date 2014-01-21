@@ -18,7 +18,7 @@ import requests.exceptions
 from student.tests.factories import UserFactory
 from verify_student.models import (
     SoftwareSecurePhotoVerification, VerificationException,
-    MidcourseReverificationWindow, SSPMidcourseReverification,
+    MidcourseReverificationWindow,
 )
 from util.testing import UrlResetMixin
 import verify_student.models
@@ -426,7 +426,7 @@ class TestSSPMidcourseReverification(TestCase):
         course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
         user = UserFactory.create()
         # if there are no windows for a course, this should return True
-        self.assertTrue(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
+        self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
 
         # first, make three windows
         window1 = MidcourseReverificationWindow(
@@ -451,14 +451,14 @@ class TestSSPMidcourseReverification(TestCase):
         window3.save()
 
         # make two SSPMidcourseReverifications for those windows
-        attempt1 = SSPMidcourseReverification(
+        attempt1 = SoftwareSecurePhotoVerification(
             status="approved",
             user=user,
             window=window1
         )
         attempt1.save()
 
-        attempt2 = SSPMidcourseReverification(
+        attempt2 = SoftwareSecurePhotoVerification(
             status="approved",
             user=user,
             window=window2
@@ -466,9 +466,9 @@ class TestSSPMidcourseReverification(TestCase):
         attempt2.save()
 
         # should return False because only 2 of 3 windows have verifications
-        self.assertFalse(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
+        self.assertFalse(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
 
-        attempt3 = SSPMidcourseReverification(
+        attempt3 = SoftwareSecurePhotoVerification(
             status="must_retry",
             user=user,
             window=window3
@@ -476,13 +476,13 @@ class TestSSPMidcourseReverification(TestCase):
         attempt3.save()
 
         # should return False because the last verification exists BUT is not approved
-        self.assertFalse(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
+        self.assertFalse(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
 
         attempt3.status = "approved"
         attempt3.save()
 
         # should now return True because all windows have approved verifications
-        self.assertTrue(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
+        self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
 
     def test_original_verification(self):
         course_id = "MITx/999/Robot_Super_Course"
@@ -496,23 +496,8 @@ class TestSSPMidcourseReverification(TestCase):
             end_date=datetime.now(pytz.UTC) - timedelta(days=13),
         )
         window.save()
-        midcourse_attempt = SSPMidcourseReverification(user=user, window=window)
-        self.assertEquals(midcourse_attempt.original_verification(), orig_attempt)
-
-    def test_generate_original_s3_key(self):
-        course_id = "MITx/999/Robot_Super_Course"
-        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
-        user = UserFactory.create()
-        orig_attempt = SoftwareSecurePhotoVerification(user=user)
-        orig_attempt.save()
-        window = MidcourseReverificationWindow(
-            course_id=course_id,
-            start_date=datetime.now(pytz.UTC) - timedelta(days=15),
-            end_date=datetime.now(pytz.UTC) - timedelta(days=13),
-        )
-        window.save()
-        midcourse_attempt = SSPMidcourseReverification(user=user, window=window)
-        self.assertEquals(orig_attempt._generate_s3_key("test").key, midcourse_attempt._generate_original_s3_key("test").key)
+        midcourse_attempt = SoftwareSecurePhotoVerification(user=user, window=window)
+        self.assertEquals(midcourse_attempt.original_verification(user=user), orig_attempt)
 
     def test_fetch_photo_id_image(self):
         pass
@@ -543,14 +528,14 @@ class TestSSPMidcourseReverification(TestCase):
         )
         window.save()
 
-        attempt = SSPMidcourseReverification(status="must_retry", user=user, window=window)
+        attempt = SoftwareSecurePhotoVerification(status="must_retry", user=user, window=window)
         attempt.save()
 
-        assert_false(SSPMidcourseReverification.user_has_valid_or_pending(user=user, course_id=course_id))
+        assert_false(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=user, course_id=course_id))
         
         attempt.status="approved"
         attempt.save()
-        assert_true(SSPMidcourseReverification.user_has_valid_or_pending(user=user, course_id=course_id))
+        assert_true(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=user, course_id=course_id))
         pass
 
     def test_active_for_user(self):

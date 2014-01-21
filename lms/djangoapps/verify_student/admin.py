@@ -1,8 +1,6 @@
 from ratelimitbackend import admin
 from verify_student.models import SoftwareSecurePhotoVerification
 from verify_student.models import MidcourseReverificationWindow
-from verify_student.models import SSPMidcourseReverification
 
 admin.site.register(SoftwareSecurePhotoVerification)
 admin.site.register(MidcourseReverificationWindow)
-admin.site.register(SSPMidcourseReverification)

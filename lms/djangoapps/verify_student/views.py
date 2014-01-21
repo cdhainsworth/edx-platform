@@ -30,7 +30,7 @@ from shoppingcart.processors.CyberSource import (
     get_signed_purchase_params, get_purchase_endpoint
 )
 from verify_student.models import (
-    SoftwareSecurePhotoVerification, MidcourseReverificationWindow, SSPMidcourseReverification
+    SoftwareSecurePhotoVerification, MidcourseReverificationWindow,
 )
 import ssencrypt
 
@@ -356,7 +356,7 @@ class MidCourseReverifyView(View):
         try:
             # TODO look at this more carefully! #1 testing candidate
             now = datetime.datetime.now(UTC)
-            attempt = SSPMidcourseReverification(user=request.user, window=MidcourseReverificationWindow.get_window(course_id, now))
+            attempt = SoftwareSecurePhotoVerification(user=request.user, window=MidcourseReverificationWindow.get_window(course_id, now))
             b64_face_image = request.POST['face_image'].split(",")[1]
 
             attempt.upload_face_image(b64_face_image.decode('base64'))

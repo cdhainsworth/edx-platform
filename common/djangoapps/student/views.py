@@ -47,7 +47,7 @@ from student.models import (
 )
 from student.forms import PasswordResetFormNoActive
 
-from verify_student.models import SoftwareSecurePhotoVerification, MidcourseReverificationWindow, SSPMidcourseReverification
+from verify_student.models import SoftwareSecurePhotoVerification, MidcourseReverificationWindow
 from certificates.models import CertificateStatuses, certificate_status_for_student
 
 from xmodule.course_module import CourseDescriptor
@@ -392,9 +392,9 @@ def dashboard(request):
     prompt_midcourse_reverify = False
     reverify_course_data = []
     for (course, enrollment) in course_enrollment_pairs:
-        if MidcourseReverificationWindow.window_open_for_course(course.id) and not SSPMidcourseReverification.user_has_valid_or_pending(user, course.id):
+        if MidcourseReverificationWindow.window_open_for_course(course.id) and not SoftwareSecurePhotoVerification.user_has_valid_or_pending(user, course_id=course.id):
             window = MidcourseReverificationWindow.get_window(course.id, datetime.datetime.now(UTC))
-            status_for_window = SSPMidcourseReverification.get_status_for_window(user, window)
+            status_for_window = SoftwareSecurePhotoVerification.user_status(user, course_id=window.course_id)
             reverify_course_data.append(
                 (
                     course.id,
