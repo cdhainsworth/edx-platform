@@ -40,11 +40,6 @@ from verify_student.ssencrypt import (
 
 log = logging.getLogger(__name__)
 
-# Evidently South migrations complain a lot if you have a default set to uuid.uuid4, so
-# I had to add this function to make South happy, see this for more:
-#   http://stackoverflow.com/questions/15041265/south-migrate-error-name-uuid-is-not-defined
-# If anyone knows a happier solution, do let me know; otherwise I'll remove this comment
-# after CR
 def generateUUID():
         return str(uuid.uuid4)
 
@@ -57,7 +52,6 @@ class MidcourseReverificationWindow(models.Model):
     start date) (TODO: should the non-overlap constraint be explicitly enforced by the model?)
     """
     # the course that this window is attached to
-    # TODO should this be a foreignkey?
     course_id = models.CharField(max_length=255, db_index=True)
     start_date = models.DateTimeField(default=None, null=True, blank=True)
     end_date = models.DateTimeField(default=None, null=True, blank=True)

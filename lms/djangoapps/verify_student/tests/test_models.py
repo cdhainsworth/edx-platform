@@ -20,6 +20,7 @@ from verify_student.models import (
     SoftwareSecurePhotoVerification, VerificationException,
     MidcourseReverificationWindow,
 )
+from verify_student.tests.factories import MidcourseReverificationWindowFactory
 from util.testing import UrlResetMixin
 import verify_student.models
 
@@ -490,7 +491,7 @@ class TestSSPMidcourseReverification(TestCase):
         user = UserFactory.create()
         orig_attempt = SoftwareSecurePhotoVerification(user=user)
         orig_attempt.save()
-        window = MidcourseReverificationWindow(
+        window = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=15),
             end_date=datetime.now(pytz.UTC) - timedelta(days=13),
