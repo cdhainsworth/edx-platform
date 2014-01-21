@@ -67,9 +67,12 @@ class MidcourseReverificationWindow(models.Model):
         """
         now = datetime.now(pytz.UTC)
 
-        # We are assuming one window per course_id.  TODO find out if this assumption is OK
         try:
-            window = cls.objects.get(course_id=course_id)
+            window = cls.objects.get(
+                course_id=course_id,
+                start_date__lte=now,
+                end_date__gte=now,
+            )
         except(ObjectDoesNotExist):
             return False
 

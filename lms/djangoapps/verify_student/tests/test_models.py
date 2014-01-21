@@ -1,18 +1,25 @@
 # -*- coding: utf-8 -*-
-from datetime import timedelta
+from datetime import timedelta, datetime
 import json
+from xmodule.modulestore.tests.factories import CourseFactory
 from nose.tools import (
     assert_in, assert_is_none, assert_equals, assert_not_equals, assert_raises,
     assert_true, assert_false
 )
 from mock import MagicMock, patch
+import pytz
 from django.test import TestCase
+from courseware.tests.tests import TEST_DATA_MONGO_MODULESTORE
+from django.test.utils import override_settings
 from django.conf import settings
 import requests
 import requests.exceptions
 
 from student.tests.factories import UserFactory
-from verify_student.models import SoftwareSecurePhotoVerification, VerificationException
+from verify_student.models import (
+    SoftwareSecurePhotoVerification, VerificationException,
+    MidcourseReverificationWindow, SSPMidcourseReverification,
+)
 from util.testing import UrlResetMixin
 import verify_student.models
 
@@ -362,3 +369,87 @@ class TestPhotoVerification(TestCase):
             attempt.error_msg = msg
             parsed_error_msg = attempt.parsed_error_msg()
             self.assertEquals(parsed_error_msg, "There was an error verifying your ID photos.")
+
+@override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
+class TestMidcourseReverificationWindow(TestCase):
+    def test_window_open_for_course(self):
+        course_id = "MITx/999/Robot_Super_Course"
+        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
+        # Should return False if no windows exist for a course
+        self.assertFalse(MidcourseReverificationWindow.window_open_for_course(course_id))
+
+        # Should return False if a window exists, but it's not in the current timeframe
+        window_expired = MidcourseReverificationWindow(
+            course_id=course_id, 
+            start_date=datetime.now(pytz.utc) - timedelta(days=10),
+            end_date=datetime.now(pytz.utc) - timedelta(days=5)
+        )
+        window_expired.save()
+        self.assertFalse(MidcourseReverificationWindow.window_open_for_course(course_id))
+
+        # Should return True if a non-expired window exists
+        window_valid = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.utc) - timedelta(days=3),
+            end_date = datetime.now(pytz.utc) + timedelta(days=3)
+        )
+        window_valid.save()
+        self.assertTrue(MidcourseReverificationWindow.window_open_for_course(course_id))
+
+    def test_get_window(self):
+        course_id = "MITx/999/Robot_Super_Course"
+        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
+
+        # if no window exists, returns None
+        self.assertIsNone(MidcourseReverificationWindow.get_window(course_id, datetime.now(pytz.utc)))
+
+        # we should get the expected window otherwise
+        window_valid = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.utc) - timedelta(days=3),
+            end_date = datetime.now(pytz.utc) + timedelta(days=3)
+        )
+        window_valid.save()
+        self.assertEquals(
+            window_valid, 
+            MidcourseReverificationWindow.get_window(course_id, datetime.now(pytz.utc))
+        )
+
+@override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
+@patch.dict(settings.VERIFY_STUDENT, FAKE_SETTINGS)
+@patch('verify_student.models.S3Connection', new=MockS3Connection)
+@patch('verify_student.models.Key', new=MockKey)
+@patch('verify_student.models.requests.post', new=mock_software_secure_post)
+class TestSSPMidcourseReverification(TestCase):
+    def test_user_is_reverified_for_all(self):
+        pass
+
+    def test_original_verification(self):
+        pass
+
+    def test_generate_original_s3_key(self):
+        pass
+
+    def test_fetch_photo_id_image(self):
+        pass
+
+    def test_upload_photo_id_image(self):
+        pass
+
+    def test_get_status_for_window(self):
+        pass
+
+    def test_user_status(self):
+        pass
+
+    def test_user_status(self):
+        pass
+
+    def test_user_is_verified(self):
+        pass
+
+    def test_user_has_valid_or_pending(self):
+        pass
+
+    def test_active_for_user(self):
+        pass
