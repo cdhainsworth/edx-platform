@@ -1087,8 +1087,9 @@ class NumericalResponseTest(ResponseTest):
         with self.assertRaises(StudentInputError):
             problem.grade_answers(input_dict)
 
+        # test isnan variable
         problem = self.build_problem(answer='(1, 5)')
-        input_dict = {'1_2_1': 'test_nan'}
+        input_dict = {'1_2_1': ''}
         with self.assertRaises(StudentInputError):
             problem.grade_answers(input_dict)
 
