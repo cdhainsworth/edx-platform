@@ -422,7 +422,68 @@ class TestMidcourseReverificationWindow(TestCase):
 @patch('verify_student.models.requests.post', new=mock_software_secure_post)
 class TestSSPMidcourseReverification(TestCase):
     def test_user_is_reverified_for_all(self):
-        pass
+        course_id = "MITx/999/Robot_Super_Course"
+        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
+        user = UserFactory.create()
+        # if there are no windows for a course, this should return True
+        self.assertTrue(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
+
+        # first, make three windows
+        window1 = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.UTC) - timedelta(days=15),
+            end_date=datetime.now(pytz.UTC) - timedelta(days=13),
+        )
+        window1.save()
+
+        window2 = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.UTC) - timedelta(days=10),
+            end_date=datetime.now(pytz.UTC) - timedelta(days=8),
+        )
+        window2.save()
+
+        window3 = MidcourseReverificationWindow(
+            course_id=course_id,
+            start_date=datetime.now(pytz.UTC) - timedelta(days=5),
+            end_date=datetime.now(pytz.UTC) - timedelta(days=3),
+        )
+        window3.save()
+
+        # make two SSPMidcourseReverifications for those windows
+        attempt1 = SSPMidcourseReverification(
+            status="approved",
+            user=user,
+            window=window1
+        )
+        attempt1.save()
+
+        attempt2 = SSPMidcourseReverification(
+            status="approved",
+            user=user,
+            window=window2
+        )
+        attempt2.save()
+
+        # should return False because only 2 of 3 windows have verifications
+        self.assertFalse(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
+
+        attempt3 = SSPMidcourseReverification(
+            status="must_retry",
+            user=user,
+            window=window3
+        )
+        attempt3.save()
+
+        # should return False because the last verification exists BUT is not approved
+        self.assertFalse(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
+
+        attempt3.status = "approved"
+        attempt3.save()
+
+        # should now return True because all windows have approved verifications
+        from nose.tools import set_trace; set_trace()
+        self.assertTrue(SSPMidcourseReverification.user_is_reverified_for_all(course_id, user))
 
     def test_original_verification(self):
         pass

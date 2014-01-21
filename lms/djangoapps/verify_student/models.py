@@ -768,7 +768,7 @@ class SSPMidcourseReverification(SoftwareSecurePhotoVerification):
     window = models.ForeignKey(MidcourseReverificationWindow, db_index=True)
 
     @classmethod
-    def user_is_reverified_for_all(self, course_id, user):
+    def user_is_reverified_for_all(cls, course_id, user):
         """
         Checks to see if the student has successfully reverified for all of the
         mandatory re-verification windows associated with a course.
