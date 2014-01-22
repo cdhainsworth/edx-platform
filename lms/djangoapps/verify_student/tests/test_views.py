@@ -177,8 +177,7 @@ class TestMidCourseReverifyView(TestCase):
     @patch.dict(settings.FEATURES, {'AUTOMATIC_VERIFY_STUDENT_IDENTITY_FOR_TESTING': True})
     def test_midcourse_reverify_post_success(self):
         url = reverse('verify_student_midcourse_reverify', kwargs={'course_id': self.course_id})
-        response = self.client.post(url, {'face_image': ',',
-                                          'photo_id_image': ','})
+        response = self.client.post(url, {'face_image': ','})
         self.assertEquals(response.status_code, 302)
         try:
             verification_attempt = SoftwareSecurePhotoVerification.objects.get(user=self.user)

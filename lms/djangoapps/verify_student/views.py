@@ -367,6 +367,7 @@ class MidCourseReverifyView(View):
 
             attempt.save()
             attempt.submit()
+            return HttpResponseRedirect(reverse('verify_student_midcourse_reverification_confirmation'))
         except Exception:
             log.exception(
                 "Could not submit verification attempt for user {}".format(request.user.id)
