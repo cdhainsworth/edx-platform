@@ -148,6 +148,22 @@ class StubOraServiceTest(unittest.TestCase):
         # Shoud be two graded  and none required
         self._assert_num_graded(student_id, 2, 0)
 
+    def test_problem_list(self):
+
+        # The problem list returns dummy counts which are not updated
+        # The location we use is ignored by the LMS, and we ignore it in the stub,
+        # so we use a dummy value there too.
+        response = requests.get(
+            self._peer_url('get_problem_list'),
+            params={'course_id': 'test course'}
+        )
+
+        self._assert_response(response, {
+            'version': 1, 'success': True,
+            'problem_list': self.server.DUMMY_DATA['problem_list']
+        })
+
+
     def _peer_url(self, path):
         """
         Construt a URL to the stub ORA peer-grading service.

@@ -67,6 +67,7 @@ class StubOraHandler(StubHttpRequestHandler):
         '/peer_grading/show_calibration_essay': '_show_calibration_essay',
         '/peer_grading/get_notifications': '_get_notifications',
         '/peer_grading/get_data_for_location': '_get_data_for_location',
+        '/peer_grading/get_problem_list': '_get_problem_list',
     }
 
     POST_URL_HANDLERS = {
@@ -262,6 +263,29 @@ class StubOraHandler(StubHttpRequestHandler):
             'max_score': self.server.DUMMY_DATA['max_score']
         })
 
+    @require_params('GET', 'course_id')
+    def _get_problem_list(self):
+        """
+        Retrieve the list of problems available for peer grading.
+
+        Method: GET
+
+        Params:
+            - course_id
+
+        Result (JSON):
+            - success (bool)
+            - problem_list (list)
+
+        where `problem_list` is a list of dictionaries with keys:
+            - location (str)
+            - problem_name (str)
+            - num_graded (int)
+            - num_pending (int)
+        """
+        self._success_response({'problem_list': self.server.DUMMY_DATA['problem_list']})
+
+
     @require_params('POST', 'grader_id', 'location', 'submission_id', 'score', 'feedback', 'submission_key')
     def _save_grade(self):
         """
@@ -391,6 +415,12 @@ class StubOraService(StubHttpService):
         'actual_rubric': pkg_resources.resource_string(__name__, "data/ora_graded_rubric.xml"),
         'actual_feedback': 'Great job!',
         'student_sub_count': 1,
+        'problem_list': [{
+            'location': 'test_location',
+            'problem_name': 'test problem',
+            'num_graded': 1,
+            'num_pending': 1,
+        }],
     }
 
     def __init__(self, *args, **kwargs):
