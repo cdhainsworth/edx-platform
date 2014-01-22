@@ -203,7 +203,7 @@ def i_am_registered_for_the_course(coursenum, metadata, user='Instructor'):
         normal_student = UserFactory()
         instructor = InstructorFactory(course=course_location)
         assert not has_access(normal_student, course_descriptor, 'load')
-        assert not has_access(user, course_descriptor, 'load')
+        assert has_access(user, course_descriptor, 'load')
         assert has_access(instructor, course_descriptor, 'load')
     else:
         create_course_for_lti(coursenum, metadata)
