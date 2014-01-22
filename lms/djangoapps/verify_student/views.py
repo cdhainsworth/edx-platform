@@ -358,7 +358,7 @@ class MidCourseReverifyView(View):
         try:
             # TODO look at this more carefully! #1 testing candidate
             now = datetime.datetime.now(UTC)
-            attempt = SoftwareSecurePhotoVerification(user=request.user, window=MidcourseReverificationWindow.get_window(course_id, now)) #cover
+            attempt = SoftwareSecurePhotoVerification(user=request.user, window=MidcourseReverificationWindow.get_window(course_id, now))
             b64_face_image = request.POST['face_image'].split(",")[1]
 
             attempt.upload_face_image(b64_face_image.decode('base64'))
@@ -367,16 +367,15 @@ class MidCourseReverifyView(View):
 
             attempt.save()
             attempt.submit()
-            return HttpResponseRedirect(reverse('verify_student_midcourse_reverification_confirmation')) #cover
-        except Exception: #cover
-            log.exception( #cover
-                "Could not submit verification attempt for user {}".format(request.user.id) #cover
+        except Exception:
+            log.exception(
+                "Could not submit verification attempt for user {}".format(request.user.id)
             )
-            context = { #cover
+            context = {
                 "user_full_name": request.user.profile.name,
                 "error": True,
             }
-            return render_to_response("verify_student/midcourse_photo_reverification.html", context) #cover
+            return render_to_response("verify_student/midcourse_photo_reverification.html", context)
 
 
 def midcourse_reverify_dash(_request):

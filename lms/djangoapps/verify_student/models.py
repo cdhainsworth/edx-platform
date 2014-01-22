@@ -237,7 +237,7 @@ class PhotoVerification(StatusModel):
     def user_is_verified(cls, user, earliest_allowed_date=None):
         """
         Return whether or not a user has satisfactorily proved their
-        identity wrt to the INITIAL verification. Depending on the policy, 
+        identity wrt to the INITIAL verification. Depending on the policy,
         this can expire after some period of time, so a user might have to renew periodically.
         """
         return cls.objects.filter(
@@ -329,14 +329,14 @@ class PhotoVerification(StatusModel):
             # we need to check the most recent attempt to see if we need to ask them to do
             # a retry
             try:
-                attempts = cls.objects.filter(user=user, window__course_id=course_id).order_by('-updated_at') #cover
+                attempts = cls.objects.filter(user=user, window__course_id=course_id).order_by('-updated_at')
                 attempt = attempts[0]
             # this is the change for midcourse verifications
             # if there is no verification, we look up course_id, via window, and find out if the user has a verified enrollment
             # if verified enrolled in course but no verification: must_reverify
             # if not verified enrollment: none
             except IndexError:
-                if CourseEnrollment.objects.filter(user=user, course_id=course_id, mode="verified").exists: #cover
+                if CourseEnrollment.objects.filter(user=user, course_id=course_id, mode="verified").exists:
                     return ('must_reverify', error_msg)
                 else:
                     return('none', error_msg)

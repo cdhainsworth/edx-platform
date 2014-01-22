@@ -398,9 +398,9 @@ def dashboard(request):
             and not SoftwareSecurePhotoVerification.user_has_valid_or_pending(user, course_id=course.id)
             and enrollment.mode == "verified"
         ):
-            window = MidcourseReverificationWindow.get_window(course.id, datetime.datetime.now(UTC)) #cover
-            status_for_window = SoftwareSecurePhotoVerification.user_status(user, course_id=window.course_id) #cover
-            reverify_course_data.append( #cover
+            window = MidcourseReverificationWindow.get_window(course.id, datetime.datetime.now(UTC))
+            status_for_window = SoftwareSecurePhotoVerification.user_status(user, course_id=window.course_id)
+            reverify_course_data.append(
                 (
                     course.id,
                     course.display_name,

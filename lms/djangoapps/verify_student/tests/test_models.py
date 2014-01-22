@@ -444,7 +444,7 @@ class TestSSPMidcourseReverification(TestCase):
         self.user = UserFactory.create()
 
     def test_user_is_reverified_for_all(self):
-        
+
         # if there are no windows for a course, this should return True
         self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(self.course_id, self.user))
 
