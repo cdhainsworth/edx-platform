@@ -1,14 +1,19 @@
 #pylint: disable=C0111
 
+import datetime
 import os
+import pytz
+from mock import patch
 
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from lettuce import world, step
 from lettuce.django import django_url
-from common import course_id, visit_scenario_item
 
+from common import course_id, visit_scenario_item
 from courseware.tests.factories import InstructorFactory, BetaTesterFactory
+from courseware.access import has_access
+from student.tests.factories import UserFactory
 
 
 @step('I view the LTI and error is shown$')
@@ -126,7 +131,7 @@ def add_correct_lti_to_course(_step, fields):
     visit_scenario_item('LTI')
 
 
-def create_course(course, metadata):
+def create_course_for_lti(course, metadata):
 
     # First clear the modulestore so we don't try to recreate
     # the same course twice
@@ -181,18 +186,34 @@ def create_course(course, metadata):
         metadata={'graded': True, 'format': 'Homework'})
 
 
-def i_am_registered_for_the_course(course, metadata, user='Instructor'):
-    # Create the course
-    create_course(course, metadata)
-
+@patch.dict('courseware.access.settings.FEATURES', {'DISABLE_START_DATES': False})
+def i_am_registered_for_the_course(coursenum, metadata, user='Instructor'):
     # Create user
     if user == 'BetaTester':
-        user = BetaTesterFactory(course=world.scenario_dict['COURSE'].location)
+        # Create the course
+        now = datetime.datetime.now(pytz.UTC)
+        tomorrow = now + datetime.timedelta(days=5)
+        metadata.update({'days_early_for_beta': 5, 'start': tomorrow})
+        create_course_for_lti(coursenum, metadata)
+        course_descriptor = world.scenario_dict['COURSE']
+        course_location = world.scenario_dict['COURSE'].location
+
+        # create beta tester
+        user = BetaTesterFactory(course=course_location)
+        normal_student = UserFactory()
+        instructor = InstructorFactory(course=course_location)
+        assert not has_access(normal_student, course_descriptor, 'load')
+        assert not has_access(user, course_descriptor, 'load')
+        assert has_access(instructor, course_descriptor, 'load')
     else:
-        user = InstructorFactory(course=world.scenario_dict['COURSE'].location)
+        create_course_for_lti(coursenum, metadata)
+        course_descriptor = world.scenario_dict['COURSE']
+        course_location = world.scenario_dict['COURSE'].location
+        user = InstructorFactory(course=course_location)
 
     # Enroll the user in the course and log them in
-    world.enroll_user(user, course_id(course))
+    if has_access(user, course_descriptor, 'load'):
+        world.enroll_user(user, course_id(coursenum))
     world.log_in(username=user.username, password='test')
 
 
