@@ -381,7 +381,7 @@ class TestMidcourseReverificationWindow(TestCase):
         self.assertFalse(MidcourseReverificationWindow.window_open_for_course(course_id))
 
         # Should return False if a window exists, but it's not in the current timeframe
-        window_expired = MidcourseReverificationWindow(
+        window_expired = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=10),
             end_date=datetime.now(pytz.utc) - timedelta(days=5)
@@ -390,7 +390,7 @@ class TestMidcourseReverificationWindow(TestCase):
         self.assertFalse(MidcourseReverificationWindow.window_open_for_course(course_id))
 
         # Should return True if a non-expired window exists
-        window_valid = MidcourseReverificationWindow(
+        window_valid = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=3),
             end_date=datetime.now(pytz.utc) + timedelta(days=3)
@@ -406,7 +406,7 @@ class TestMidcourseReverificationWindow(TestCase):
         self.assertIsNone(MidcourseReverificationWindow.get_window(course_id, datetime.now(pytz.utc)))
 
         # we should get the expected window otherwise
-        window_valid = MidcourseReverificationWindow(
+        window_valid = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=3),
             end_date=datetime.now(pytz.utc) + timedelta(days=3)
