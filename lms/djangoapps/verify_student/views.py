@@ -33,6 +33,7 @@ from verify_student.models import (
     SoftwareSecurePhotoVerification, MidcourseReverificationWindow,
 )
 import ssencrypt
+from xmodule.modulestore.exceptions import ItemNotFoundError
 
 log = logging.getLogger(__name__)
 
@@ -354,44 +355,48 @@ class MidCourseReverifyView(View):
         """
         submits the reverification to SoftwareSecure
         """
-        try:
+        try: #cover
             # TODO look at this more carefully! #1 testing candidate
-            now = datetime.datetime.now(UTC)
-            attempt = SoftwareSecurePhotoVerification(user=request.user, window=MidcourseReverificationWindow.get_window(course_id, now))
-            b64_face_image = request.POST['face_image'].split(",")[1]
+            now = datetime.datetime.now(UTC) #cover
+            attempt = SoftwareSecurePhotoVerification(user=request.user, window=MidcourseReverificationWindow.get_window(course_id, now)) #cover
+            b64_face_image = request.POST['face_image'].split(",")[1] #cover
 
-            attempt.upload_face_image(b64_face_image.decode('base64'))
-            attempt.fetch_photo_id_image()
-            attempt.mark_ready()
+            attempt.upload_face_image(b64_face_image.decode('base64')) #cover
+            attempt.fetch_photo_id_image() #cover
+            attempt.mark_ready() #cover
 
-            attempt.save()
-            attempt.submit()
-            return HttpResponseRedirect(reverse('verify_student_midcourse_reverification_confirmation'))
-        except Exception:
-            log.exception(
-                "Could not submit verification attempt for user {}".format(request.user.id)
+            attempt.save() #cover
+            attempt.submit() #cover
+            return HttpResponseRedirect(reverse('verify_student_midcourse_reverification_confirmation')) #cover
+        except Exception: #cover
+            log.exception( #cover
+                "Could not submit verification attempt for user {}".format(request.user.id) #cover
             )
-            context = {
+            context = { #cover
                 "user_full_name": request.user.profile.name,
                 "error": True,
             }
-            return render_to_response("verify_student/midcourse_photo_reverification.html", context)
+            return render_to_response("verify_student/midcourse_photo_reverification.html", context) #cover
 
 
 def midcourse_reverify_dash(_request):
+    """
+    Shows the "course reverification dashboard", which displays the reverification status (must reverify,
+    pending, approved, failed, etc) of all courses in which a student has a verified enrollment.
+    """
     # TODO same comment as in student/views.py: need to factor out this functionality
-    user = _request.user
-    course_enrollment_pairs = []
-    for enrollment in CourseEnrollment.enrollments_for_user(user):
-        try:
-            course_enrollment_pairs.append((course_from_id(enrollment.course_id), enrollment))
-        except ItemNotFoundError:
-            log.error("User {0} enrolled in non-existent course {1}"
+    user = _request.user #cover
+    course_enrollment_pairs = [] #cover
+    for enrollment in CourseEnrollment.enrollments_for_user(user): #cover
+        try: #cover
+            course_enrollment_pairs.append((course_from_id(enrollment.course_id), enrollment)) #cover
+        except ItemNotFoundError: #cover
+            log.error("User {0} enrolled in non-existent course {1}" #cover
                       .format(user.username, enrollment.course_id))
-    reverify_course_data = []
-    for (course, enrollment) in course_enrollment_pairs:
-        if MidcourseReverificationWindow.window_open_for_course(course.id):
-            reverify_course_data.append(
+    reverify_course_data = [] #cover
+    for (course, enrollment) in course_enrollment_pairs: #cover
+        if MidcourseReverificationWindow.window_open_for_course(course.id): #cover
+            reverify_course_data.append( #cover
                 (
                     course.id,
                     course.display_name,
@@ -399,12 +404,12 @@ def midcourse_reverify_dash(_request):
                     "must_reverify"
                 )
             )
-            prompt_midcourse_reverify = True
-    context = {
+            prompt_midcourse_reverify = True #cover
+    context = { #cover
         "user_full_name": _request.user.profile.name,
         "reverify_course_data": reverify_course_data,
     }
-    return render_to_response("verify_student/midcourse_reverify_dash.html", context)
+    return render_to_response("verify_student/midcourse_reverify_dash.html", context) #cover
 
 
 @login_required
@@ -420,4 +425,4 @@ def midcourse_reverification_confirmation(_request):
     """
     Shows the user a confirmation page if the submission to SoftwareSecure was successful
     """
-    return render_to_response("verify_student/midcourse_reverification_confirmation.html")
+    return render_to_response("verify_student/midcourse_reverification_confirmation.html") #cover
