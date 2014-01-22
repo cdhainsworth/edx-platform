@@ -10,5 +10,6 @@ class MidcourseReverificationWindowFactory(DjangoModelFactory):
     FACTORY_FOR = MidcourseReverificationWindow
 
     course_id = u'MITx/999/Robot_Super_Course'
+    # By default this factory creates a window that is currently open
     start_date = datetime.now(pytz.UTC) - timedelta(days=100)
     end_date = datetime.now(pytz.UTC) + timedelta(days=100)
