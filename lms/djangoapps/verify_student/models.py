@@ -548,23 +548,24 @@ class SoftwareSecurePhotoVerification(PhotoVerification):
         not re-verified for all windows, then they cannot receive a certificate.
         """
         all_windows = MidcourseReverificationWindow.objects.filter(course_id=course_id)
-        # TODO check on this
         # if there are no windows for a course, then return True right off
         if (not all_windows):
             return True
 
         for window in all_windows:
             try:
-                # There should be one and only one reverification object per (user, window)
-                # and the status of that object should be approved
-                if cls.objects.get(window=window, user=user).status != "approved":
+                # The status of the most recent reverification for each window must be "approved"
+                # for a student to count as completely reverified
+                attempts = cls.objects.filter(user=user, window=window).order_by('-updated_at')
+                attempt = attempts[0]
+                if attempt.status != "approved":
                     return False
             except:
                 return False
 
         return True
 
-    # TODO does this actually get the original_verification? pretty sure I need to search by date
+
     @classmethod
     def original_verification(cls, user):
         """
@@ -784,7 +785,7 @@ class SoftwareSecurePhotoVerification(PhotoVerification):
 
         return header_txt + "\n\n" + body_txt
 
-    # TODO move to testing at some point
+
     def send_request(self):
         """
         Assembles a submission to Software Secure and sends it via HTTPS.
