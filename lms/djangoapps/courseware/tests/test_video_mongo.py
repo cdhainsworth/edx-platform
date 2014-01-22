@@ -9,7 +9,7 @@ from xmodule.video_module import _create_youtube_string
 
 class TestVideo(BaseTestXmodule):
     """Integration tests: web client + mongo."""
-    maxDiff=None
+
     CATEGORY = "video"
     DATA = SOURCE_XML
 
