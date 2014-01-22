@@ -390,24 +390,24 @@ def dashboard(request):
     # TODO: Factor this out into a function; I'm pretty sure there's code duplication floating around...
     reverify_course_data = []
     for (course, enrollment) in course_enrollment_pairs:
+
         # IF the reverification window is open
-        # AND the user doesn't have a pending reverification for that window
-        # AND the user is actually verified-enrolled in the course
-        if (
-            MidcourseReverificationWindow.window_open_for_course(course.id)
-            and not SoftwareSecurePhotoVerification.user_has_valid_or_pending(user, course_id=course.id)
-            and enrollment.mode == "verified"
-        ):
+        if (MidcourseReverificationWindow.window_open_for_course(course.id)):
+
+            # AND the user is actually verified-enrolled AND they don't have a pending reverification already
             window = MidcourseReverificationWindow.get_window(course.id, datetime.datetime.now(UTC))
-            status_for_window = SoftwareSecurePhotoVerification.user_status(user, course_id=window.course_id)
-            reverify_course_data.append(
-                (
-                    course.id,
-                    course.display_name,
-                    window.end_date,
-                    "must_reverify"  # TODO: reflect more states than just "must_reverify" has_valid_or_pending (must show failure)
+            if (enrollment.mode == "verified" and not SoftwareSecurePhotoVerification.user_has_valid_or_pending(user, window=window)):
+            
+                window = MidcourseReverificationWindow.get_window(course.id, datetime.datetime.now(UTC))
+                status_for_window = SoftwareSecurePhotoVerification.user_status(user, window=window)
+                reverify_course_data.append(
+                    (
+                        course.id,
+                        course.display_name,
+                        window.end_date,
+                        "must_reverify"  # TODO: reflect more states than just "must_reverify" has_valid_or_pending (must show failure)
+                    )
                 )
-            )
 
     show_refund_option_for = frozenset(course.id for course, _enrollment in course_enrollment_pairs
                                        if _enrollment.refundable())

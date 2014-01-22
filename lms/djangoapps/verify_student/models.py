@@ -297,10 +297,10 @@ class PhotoVerification(StatusModel):
         status = 'none'
         error_msg = ''
 
-        if cls.user_is_verified(user, window):
+        if cls.user_is_verified(user, window=window):
             status = 'approved'
 
-        elif cls.user_has_valid_or_pending(user, window):
+        elif cls.user_has_valid_or_pending(user, window=window):
             # user_has_valid_or_pending does include 'approved', but if we are
             # here, we know that the attempt is still pending
             status = 'pending'
