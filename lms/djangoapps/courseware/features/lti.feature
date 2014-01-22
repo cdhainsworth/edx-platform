@@ -56,7 +56,7 @@ Feature: LMS.LTI component
   And I see in the gradebook table that "Total" is "5"
 
   #7
-  Scenario: Graded LTI component in LMS is correctly works with beta testers.
+  Scenario: Graded LTI component in LMS is correctly works with beta testers
   Given the course has correct LTI credentials with registered BetaTester
   And the course has an LTI component with correct fields:
   | open_in_a_new_page | weight | is_graded | has_score |
