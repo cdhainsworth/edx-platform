@@ -424,30 +424,33 @@ class TestMidcourseReverificationWindow(TestCase):
 @patch('verify_student.models.Key', new=MockKey)
 @patch('verify_student.models.requests.post', new=mock_software_secure_post)
 class TestSSPMidcourseReverification(TestCase):
+    def setUp(self):
+        self.course_id = "MITx/999/Robot_Super_Course"
+        self.course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
+        self.user = UserFactory.create()
+
     def test_user_is_reverified_for_all(self):
-        course_id = "MITx/999/Robot_Super_Course"
-        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
-        user = UserFactory.create()
+        
         # if there are no windows for a course, this should return True
-        self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
+        self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(self.course_id, self.user))
 
         # first, make three windows
         window1 = MidcourseReverificationWindowFactory(
-            course_id=course_id,
+            course_id=self.course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=15),
             end_date=datetime.now(pytz.UTC) - timedelta(days=13),
         )
         window1.save()
 
         window2 = MidcourseReverificationWindowFactory(
-            course_id=course_id,
+            course_id=self.course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=10),
             end_date=datetime.now(pytz.UTC) - timedelta(days=8),
         )
         window2.save()
 
         window3 = MidcourseReverificationWindowFactory(
-            course_id=course_id,
+            course_id=self.course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=5),
             end_date=datetime.now(pytz.UTC) - timedelta(days=3),
         )
@@ -456,51 +459,48 @@ class TestSSPMidcourseReverification(TestCase):
         # make two SSPMidcourseReverifications for those windows
         attempt1 = SoftwareSecurePhotoVerification(
             status="approved",
-            user=user,
+            user=self.user,
             window=window1
         )
         attempt1.save()
 
         attempt2 = SoftwareSecurePhotoVerification(
             status="approved",
-            user=user,
+            user=self.user,
             window=window2
         )
         attempt2.save()
 
         # should return False because only 2 of 3 windows have verifications
-        self.assertFalse(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
+        self.assertFalse(SoftwareSecurePhotoVerification.user_is_reverified_for_all(self.course_id, self.user))
 
         attempt3 = SoftwareSecurePhotoVerification(
             status="must_retry",
-            user=user,
+            user=self.user,
             window=window3
         )
         attempt3.save()
 
         # should return False because the last verification exists BUT is not approved
-        self.assertFalse(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
+        self.assertFalse(SoftwareSecurePhotoVerification.user_is_reverified_for_all(self.course_id, self.user))
 
         attempt3.status = "approved"
         attempt3.save()
 
         # should now return True because all windows have approved verifications
-        self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
+        self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(self.course_id, self.user))
 
     def test_original_verification(self):
-        course_id = "MITx/999/Robot_Super_Course"
-        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
-        user = UserFactory.create()
-        orig_attempt = SoftwareSecurePhotoVerification(user=user)
+        orig_attempt = SoftwareSecurePhotoVerification(user=self.user)
         orig_attempt.save()
         window = MidcourseReverificationWindowFactory(
-            course_id=course_id,
+            course_id=self.course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=15),
             end_date=datetime.now(pytz.UTC) - timedelta(days=13),
         )
         window.save()
-        midcourse_attempt = SoftwareSecurePhotoVerification(user=user, window=window)
-        self.assertEquals(midcourse_attempt.original_verification(user=user), orig_attempt)
+        midcourse_attempt = SoftwareSecurePhotoVerification(user=self.user, window=window)
+        self.assertEquals(midcourse_attempt.original_verification(user=self.user), orig_attempt)
 
     def test_fetch_photo_id_image(self):
         pass
@@ -521,25 +521,21 @@ class TestSSPMidcourseReverification(TestCase):
         pass
 
     def test_user_has_valid_or_pending(self):
-        course_id = "MITx/999/Robot_Super_Course"
-        course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
-        user = UserFactory.create()
         window = MidcourseReverificationWindowFactory(
-            course_id=course_id,
+            course_id=self.course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=15),
             end_date=datetime.now(pytz.UTC) - timedelta(days=13),
         )
         window.save()
 
-        attempt = SoftwareSecurePhotoVerification(status="must_retry", user=user, window=window)
+        attempt = SoftwareSecurePhotoVerification(status="must_retry", user=self.user, window=window)
         attempt.save()
 
-        assert_false(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=user, course_id=course_id))
+        assert_false(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=self.user, course_id=self.course_id))
 
         attempt.status = "approved"
         attempt.save()
-        assert_true(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=user, course_id=course_id))
-        pass
+        assert_true(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=self.user, course_id=self.course_id))
 
     def test_active_for_user(self):
         pass
