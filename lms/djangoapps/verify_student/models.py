@@ -526,6 +526,12 @@ class SoftwareSecurePhotoVerification(PhotoVerification):
 
     3. The encrypted photos are base64 encoded and stored in an S3 bucket that
        edx-platform does not have read access to.
+
+    Note: this model handles both *inital* verifications (which you must perform
+    at the time you register for a verified cert), and *midcourse reverifications*.
+    To distinguish between the two, check the value of the property window:
+    intial verifications of a window of None, whereas midcourse reverifications
+    * must always be linked to a specific window*.
     """
     # This is a base64.urlsafe_encode(rsa_encrypt(photo_id_aes_key), ss_pub_key)
     # So first we generate a random AES-256 key to encrypt our photo ID with.
