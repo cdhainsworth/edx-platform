@@ -234,7 +234,7 @@ class PhotoVerification(StatusModel):
         return allowed_date
 
     @classmethod
-    def user_is_verified(cls, user, earliest_allowed_date=None):
+    def user_is_verified(cls, user, earliest_allowed_date=None, window=None):
         """
         Return whether or not a user has satisfactorily proved their
         identity wrt to the INITIAL verification. Depending on the policy,
@@ -245,11 +245,11 @@ class PhotoVerification(StatusModel):
             status="approved",
             created_at__gte=(earliest_allowed_date
                              or cls._earliest_allowed_date()),
-            window=None
+            window=window
         ).exists()
 
     @classmethod
-    def user_has_valid_or_pending(cls, user, earliest_allowed_date=None, course_id=None):
+    def user_has_valid_or_pending(cls, user, earliest_allowed_date=None, window=None):
         """
         Return whether the user has a complete verification attempt that is or
         *might* be good. This means that it's approved, been submitted, or would
@@ -257,39 +257,34 @@ class PhotoVerification(StatusModel):
         submitted. It's basically any situation in which the user has signed off
         on the contents of the attempt, and we have not yet received a denial.
         """
-        if course_id:
+        if window:
             valid_statuses = ['submitted', 'approved']
-            return cls.objects.filter(
-                user=user,
-                window__course_id=course_id,
-                status__in=valid_statuses,
-            ).exists()
         else:
             valid_statuses = ['must_retry', 'submitted', 'approved']
-            return cls.objects.filter(
-                user=user,
-                status__in=valid_statuses,
-                created_at__gte=(earliest_allowed_date
-                                 or cls._earliest_allowed_date()),
-                window=None,
-            ).exists()
+        return cls.objects.filter(
+            user=user,
+            status__in=valid_statuses,
+            created_at__gte=(earliest_allowed_date
+                             or cls._earliest_allowed_date()),
+            window=window,
+        ).exists()
 
     @classmethod
-    def active_for_user(cls, user, course_id=None):
+    def active_for_user(cls, user, window=None):
         """
         Return the most recent INITIAL PhotoVerification that is marked ready (i.e. the
         user has said they're set, but we haven't submitted anything yet).
         """
         # This should only be one at the most, but just in case we create more
         # by mistake, we'll grab the most recently created one.
-        active_attempts = cls.objects.filter(user=user, status='ready', window__course_id=course_id).order_by('-created_at')
+        active_attempts = cls.objects.filter(user=user, status='ready', window=window).order_by('-created_at')
         if active_attempts:
             return active_attempts[0]
         else:
             return None
 
     @classmethod
-    def user_status(cls, user, course_id=None):
+    def user_status(cls, user, window=None):
         """
         Returns the status of the user based on their past verification attempts
 
@@ -302,56 +297,44 @@ class PhotoVerification(StatusModel):
         status = 'none'
         error_msg = ''
 
-        if cls.user_is_verified(user):
+        if cls.user_is_verified(user, window):
             status = 'approved'
-        elif cls.user_has_valid_or_pending(user):
+
+        elif cls.user_has_valid_or_pending(user, window):
             # user_has_valid_or_pending does include 'approved', but if we are
             # here, we know that the attempt is still pending
             status = 'pending'
-        elif (not course_id):
-            # we need to check the most recent attempt to see if we need to ask them to do
-            # a retry
-            try:
-                attempts = cls.objects.filter(user=user, window__course_id=course_id).order_by('-updated_at')
-                attempt = attempts[0]
-            except IndexError:
-                return ('none', error_msg)
-            if attempt.created_at < cls._earliest_allowed_date():
-                return ('expired', error_msg)
 
-            # right now, this is the only state at which they must reverify. It
-            # may change later
-            if attempt.status == 'denied':
-                status = 'must_reverify'
-            if attempt.error_msg:
-                error_msg = attempt.parsed_error_msg()
         else:
             # we need to check the most recent attempt to see if we need to ask them to do
             # a retry
             try:
-                attempts = cls.objects.filter(user=user, window__course_id=course_id).order_by('-updated_at')
+                attempts = cls.objects.filter(user=user, window=window).order_by('-updated_at')
                 attempt = attempts[0]
-            # this is the change for midcourse verifications
-            # if there is no verification, we look up course_id, via window, and find out if the user has a verified enrollment
-            # if verified enrolled in course but no verification: must_reverify
-            # if not verified enrollment: none
             except IndexError:
-                if CourseEnrollment.objects.filter(user=user, course_id=course_id, mode="verified").exists:
-                    return ('must_reverify', error_msg)
+
+                # If no verification exists for a *midcourse* reverification, then that just
+                # means the student still needs to reverify.  For *original* verifications,
+                # we return 'none'
+                if(window):
+                    return('must_reverify', error_msg)
                 else:
-                    return('none', error_msg)
+                    return ('none', error_msg)
+
             if attempt.created_at < cls._earliest_allowed_date():
                 return ('expired', error_msg)
 
-            # right now, this is the only state at which they must reverify. It
-            # may change later
+            # If someone is denied their original verification attempt, they can try to reverify.
+            # However, if a midcourse reverification is denied, that denial is permanent.
             if attempt.status == 'denied':
-                status = 'must_reverify'
+                if window == None:
+                    status = 'must_reverify'
+                else:
+                    status = 'denied'
             if attempt.error_msg:
                 error_msg = attempt.parsed_error_msg()
 
         return (status, error_msg)
-
 
 
     def parsed_error_msg(self):

@@ -522,11 +522,11 @@ class TestSSPMidcourseReverification(TestCase):
         attempt = SoftwareSecurePhotoVerification(status="must_retry", user=self.user, window=window)
         attempt.save()
 
-        assert_false(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=self.user, course_id=self.course_id))
+        assert_false(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=self.user, window=window))
 
         attempt.status = "approved"
         attempt.save()
-        assert_true(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=self.user, course_id=self.course_id))
+        assert_true(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=self.user, window=window))
 
     def test_active_for_user(self):
         pass
