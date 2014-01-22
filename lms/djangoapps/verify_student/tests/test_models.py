@@ -432,21 +432,21 @@ class TestSSPMidcourseReverification(TestCase):
         self.assertTrue(SoftwareSecurePhotoVerification.user_is_reverified_for_all(course_id, user))
 
         # first, make three windows
-        window1 = MidcourseReverificationWindow(
+        window1 = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=15),
             end_date=datetime.now(pytz.UTC) - timedelta(days=13),
         )
         window1.save()
 
-        window2 = MidcourseReverificationWindow(
+        window2 = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=10),
             end_date=datetime.now(pytz.UTC) - timedelta(days=8),
         )
         window2.save()
 
-        window3 = MidcourseReverificationWindow(
+        window3 = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=5),
             end_date=datetime.now(pytz.UTC) - timedelta(days=3),
@@ -524,7 +524,7 @@ class TestSSPMidcourseReverification(TestCase):
         course_id = "MITx/999/Robot_Super_Course"
         course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
         user = UserFactory.create()
-        window = MidcourseReverificationWindow(
+        window = MidcourseReverificationWindowFactory(
             course_id=course_id,
             start_date=datetime.now(pytz.UTC) - timedelta(days=15),
             end_date=datetime.now(pytz.UTC) - timedelta(days=13),

@@ -388,7 +388,6 @@ def dashboard(request):
     verification_status, verification_msg = SoftwareSecurePhotoVerification.user_status(user)
 
     # TODO: Factor this out into a function; I'm pretty sure there's code duplication floating around...
-    prompt_midcourse_reverify = False
     reverify_course_data = []
     for (course, enrollment) in course_enrollment_pairs:
         # IF the reverification window is open
@@ -409,7 +408,6 @@ def dashboard(request):
                     "must_reverify"  # TODO: reflect more states than just "must_reverify" has_valid_or_pending (must show failure)
                 )
             )
-            prompt_midcourse_reverify = True
 
     show_refund_option_for = frozenset(course.id for course, _enrollment in course_enrollment_pairs
                                        if _enrollment.refundable())
@@ -431,7 +429,6 @@ def dashboard(request):
                'all_course_modes': course_modes,
                'cert_statuses': cert_statuses,
                'show_email_settings_for': show_email_settings_for,
-               'prompt_midcourse_reverify': prompt_midcourse_reverify,
                'reverify_course_data': reverify_course_data,
                'verification_status': verification_status,
                'verification_msg': verification_msg,
