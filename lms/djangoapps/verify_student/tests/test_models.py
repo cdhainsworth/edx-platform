@@ -371,6 +371,7 @@ class TestPhotoVerification(TestCase):
             parsed_error_msg = attempt.parsed_error_msg()
             self.assertEquals(parsed_error_msg, "There was an error verifying your ID photos.")
 
+
 @override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
 class TestMidcourseReverificationWindow(TestCase):
     def test_window_open_for_course(self):
@@ -381,7 +382,7 @@ class TestMidcourseReverificationWindow(TestCase):
 
         # Should return False if a window exists, but it's not in the current timeframe
         window_expired = MidcourseReverificationWindow(
-            course_id=course_id, 
+            course_id=course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=10),
             end_date=datetime.now(pytz.utc) - timedelta(days=5)
         )
@@ -392,7 +393,7 @@ class TestMidcourseReverificationWindow(TestCase):
         window_valid = MidcourseReverificationWindow(
             course_id=course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=3),
-            end_date = datetime.now(pytz.utc) + timedelta(days=3)
+            end_date=datetime.now(pytz.utc) + timedelta(days=3)
         )
         window_valid.save()
         self.assertTrue(MidcourseReverificationWindow.window_open_for_course(course_id))
@@ -408,13 +409,14 @@ class TestMidcourseReverificationWindow(TestCase):
         window_valid = MidcourseReverificationWindow(
             course_id=course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=3),
-            end_date = datetime.now(pytz.utc) + timedelta(days=3)
+            end_date=datetime.now(pytz.utc) + timedelta(days=3)
         )
         window_valid.save()
         self.assertEquals(
-            window_valid, 
+            window_valid,
             MidcourseReverificationWindow.get_window(course_id, datetime.now(pytz.utc))
         )
+
 
 @override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
 @patch.dict(settings.VERIFY_STUDENT, FAKE_SETTINGS)
@@ -533,8 +535,8 @@ class TestSSPMidcourseReverification(TestCase):
         attempt.save()
 
         assert_false(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=user, course_id=course_id))
-        
-        attempt.status="approved"
+
+        attempt.status = "approved"
         attempt.save()
         assert_true(SoftwareSecurePhotoVerification.user_has_valid_or_pending(user=user, course_id=course_id))
         pass

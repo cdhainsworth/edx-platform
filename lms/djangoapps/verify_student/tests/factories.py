@@ -3,6 +3,7 @@ from factory.django import DjangoModelFactory
 import pytz
 from datetime import timedelta, datetime
 
+
 # Factories don't have __init__ methods, and are self documenting
 # pylint: disable=W0232
 class MidcourseReverificationWindowFactory(DjangoModelFactory):

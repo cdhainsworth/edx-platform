@@ -326,6 +326,7 @@ class ReverifyView(View):
             }
             return render_to_response("verify_student/photo_reverification.html", context)
 
+
 class MidCourseReverifyView(View):
     """
     The mid-course reverification view.
@@ -376,6 +377,7 @@ class MidCourseReverifyView(View):
             }
             return render_to_response("verify_student/midcourse_photo_reverification.html", context)
 
+
 def midcourse_reverify_dash(_request):
     # TODO same comment as in student/views.py: need to factor out this functionality
     user = _request.user
@@ -404,12 +406,14 @@ def midcourse_reverify_dash(_request):
     }
     return render_to_response("verify_student/midcourse_reverify_dash.html", context)
 
+
 @login_required
 def reverification_submission_confirmation(_request):
     """
     Shows the user a confirmation page if the submission to SoftwareSecure was successful
     """
     return render_to_response("verify_student/reverification_confirmation.html")
+
 
 @login_required
 def midcourse_reverification_confirmation(_request):

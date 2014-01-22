@@ -97,6 +97,7 @@ class TestReverifyView(TestCase):
         self.assertEquals(response.status_code, 200)
         ((template, context), _kwargs) = render_mock.call_args
 
+
 @override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
 class TestReverifyView(TestCase):
     """
@@ -150,6 +151,7 @@ class TestReverifyView(TestCase):
             self.assertIsNotNone(verification_attempt)
         except ObjectDoesNotExist:
             self.fail('No verification object generated')
+
 
 @override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
 class TestMidCourseReverifyView(TestCase):

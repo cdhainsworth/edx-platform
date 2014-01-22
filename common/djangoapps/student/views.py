@@ -10,7 +10,6 @@ import string       # pylint: disable=W0402
 import urllib
 import uuid
 import time
-import datetime
 from pytz import UTC
 
 from django.conf import settings
@@ -407,7 +406,7 @@ def dashboard(request):
                     course.id,
                     course.display_name,
                     window.end_date,
-                    "must_reverify" # TODO: reflect more states than just "must_reverify" has_valid_or_pending (must show failure)
+                    "must_reverify"  # TODO: reflect more states than just "must_reverify" has_valid_or_pending (must show failure)
                 )
             )
             prompt_midcourse_reverify = True

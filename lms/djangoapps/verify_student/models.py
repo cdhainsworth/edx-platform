@@ -16,7 +16,6 @@ import functools
 import json
 import logging
 import uuid
-from mock import MagicMock, patch
 
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
@@ -40,8 +39,10 @@ from verify_student.ssencrypt import (
 
 log = logging.getLogger(__name__)
 
+
 def generateUUID():
-        return str(uuid.uuid4)
+    return str(uuid.uuid4)
+
 
 class MidcourseReverificationWindow(models.Model):
     """
@@ -255,7 +256,7 @@ class PhotoVerification(StatusModel):
                 user=user,
                 status="approved",
                 created_at__gte=(earliest_allowed_date
-                             or cls._earliest_allowed_date()),
+                                 or cls._earliest_allowed_date()),
                 window=None
             ).exists()
 
@@ -596,7 +597,7 @@ class SoftwareSecurePhotoVerification(PhotoVerification):
     @classmethod
     def original_verification(cls, user):
         """
-        Returns the most current SoftwareSecurePhotoVerification object associated with the user. 
+        Returns the most current SoftwareSecurePhotoVerification object associated with the user.
         """
         query = cls.objects.filter(user=user, window=None).order_by('-updated_at')
         return query[0]
@@ -626,7 +627,7 @@ class SoftwareSecurePhotoVerification(PhotoVerification):
 
     @status_before_must_be("created")
     def fetch_photo_id_image(self):
-        
+
         #Find the user's photo ID image, which was submitted with their original verification.
         #The image has already been encrypted and stored in s3, so we just need to find that
         #location
