@@ -351,6 +351,7 @@ class MidCourseReverifyView(View):
             "course_name": course.display_name_with_default,
             "course_org": course.display_org_with_default,
             "course_num": course.display_number_with_default,
+            "reverify": True,
 
         }
         return render_to_response("verify_student/midcourse_photo_reverification.html", context)
