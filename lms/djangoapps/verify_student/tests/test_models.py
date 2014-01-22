@@ -401,7 +401,7 @@ class TestMidcourseReverificationWindow(TestCase):
         self.assertFalse(MidcourseReverificationWindow.window_open_for_course(self.course_id))
 
         # Should return False if a window exists, but it's not in the current timeframe
-        window_expired = MidcourseReverificationWindowFactory(
+        MidcourseReverificationWindowFactory(
             course_id=self.course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=10),
             end_date=datetime.now(pytz.utc) - timedelta(days=5)
@@ -409,7 +409,7 @@ class TestMidcourseReverificationWindow(TestCase):
         self.assertFalse(MidcourseReverificationWindow.window_open_for_course(self.course_id))
 
         # Should return True if a non-expired window exists
-        window_valid = MidcourseReverificationWindowFactory(
+        MidcourseReverificationWindowFactory(
             course_id=self.course_id,
             start_date=datetime.now(pytz.utc) - timedelta(days=3),
             end_date=datetime.now(pytz.utc) + timedelta(days=3)
@@ -437,7 +437,7 @@ class TestMidcourseReverificationWindow(TestCase):
 @patch('verify_student.models.S3Connection', new=MockS3Connection)
 @patch('verify_student.models.Key', new=MockKey)
 @patch('verify_student.models.requests.post', new=mock_software_secure_post)
-class TestSSPMidcourseReverification(TestCase):
+class TestMidcourseReverification(TestCase):
     def setUp(self):
         self.course_id = "MITx/999/Robot_Super_Course"
         self.course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')

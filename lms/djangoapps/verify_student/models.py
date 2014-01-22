@@ -31,7 +31,6 @@ from django.utils.translation import ugettext as _
 from model_utils.models import StatusModel
 from model_utils import Choices
 
-from student.models import CourseEnrollment
 from verify_student.ssencrypt import (
     random_aes_key, encrypt_and_encode,
     generate_signed_message, rsa_encrypt
@@ -74,7 +73,7 @@ class MidcourseReverificationWindow(models.Model):
         now = datetime.now(pytz.UTC)
 
         try:
-            window = cls.objects.get(
+            cls.objects.get(
                 course_id=course_id,
                 start_date__lte=now,
                 end_date__gte=now,
@@ -336,7 +335,7 @@ class PhotoVerification(StatusModel):
             # If someone is denied their original verification attempt, they can try to reverify.
             # However, if a midcourse reverification is denied, that denial is permanent.
             if attempt.status == 'denied':
-                if window == None:
+                if window is None:
                     status = 'must_reverify'
                 else:
                     status = 'denied'
@@ -564,7 +563,6 @@ class SoftwareSecurePhotoVerification(PhotoVerification):
                 return False
 
         return True
-
 
     @classmethod
     def original_verification(cls, user):

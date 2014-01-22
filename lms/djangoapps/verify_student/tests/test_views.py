@@ -82,33 +82,6 @@ class TestReverifyView(TestCase):
     def setUp(self):
         self.user = UserFactory.create(username="rusty", password="test")
         self.client.login(username="rusty", password="test")
-
-    @patch('verify_student.views.render_to_response', render_mock)
-    def test_reverify_get(self):
-        url = reverse('verify_student_reverify')
-        response = self.client.get(url)
-        self.assertEquals(response.status_code, 200)
-        ((_template, context), _kwargs) = render_mock.call_args
-        self.assertFalse(context['error'])
-
-    @patch('verify_student.views.render_to_response', render_mock)
-    def test_reverify_post_failure(self):
-        url = reverse('verify_student_reverify')
-        response = self.client.post(url, {'face_image': '',
-                                          'photo_id_image': ''})
-        self.assertEquals(response.status_code, 200)
-        ((template, context), _kwargs) = render_mock.call_args
-
-
-@override_settings(MODULESTORE=TEST_DATA_MONGO_MODULESTORE)
-class TestReverifyView(TestCase):
-    """
-    Tests for the reverification views
-
-    """
-    def setUp(self):
-        self.user = UserFactory.create(username="rusty", password="test")
-        self.client.login(username="rusty", password="test")
         self.course_id = "MITx/999/Robot_Super_Course"
         self.course = CourseFactory.create(org='MITx', number='999', display_name='Robot Super Course')
 
