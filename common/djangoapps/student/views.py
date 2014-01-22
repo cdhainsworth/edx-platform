@@ -393,7 +393,6 @@ def dashboard(request):
 
         # IF the reverification window is open
         if (MidcourseReverificationWindow.window_open_for_course(course.id)):
-
             # AND the user is actually verified-enrolled AND they don't have a pending reverification already
             window = MidcourseReverificationWindow.get_window(course.id, datetime.datetime.now(UTC))
             if (enrollment.mode == "verified" and not SoftwareSecurePhotoVerification.user_has_valid_or_pending(user, window=window)):
@@ -1469,3 +1468,4 @@ def change_email_settings(request):
         track.views.server_track(request, "change-email-settings", {"receive_emails": "no", "course": course_id}, page='dashboard')
 
     return HttpResponse(json.dumps({'success': True}))
+                                                          
