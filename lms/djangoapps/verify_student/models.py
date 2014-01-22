@@ -23,7 +23,7 @@ import pytz
 import requests
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.auth.models import User
@@ -48,14 +48,23 @@ class MidcourseReverificationWindow(models.Model):
     """
     Defines the start and end times for midcourse reverification for a particular course.
 
-    There can be many MidcourseReverificationWindows per course, but they should not
-    have overlapping time-ranges (i.e. Window2's start date should not be before Window1's
-    start date) (TODO: should the non-overlap constraint be explicitly enforced by the model?)
+    There can be many MidcourseReverificationWindows per course, but they cannot have
+    overlapping time ranges.  This is enforced by this class's clean() method.
     """
     # the course that this window is attached to
     course_id = models.CharField(max_length=255, db_index=True)
     start_date = models.DateTimeField(default=None, null=True, blank=True)
     end_date = models.DateTimeField(default=None, null=True, blank=True)
+
+    def clean(self):
+        """
+        Gives custom validation for the MidcourseReverificationWindow model.
+        Prevents overlapping windows for any particular course.
+        """
+        query = MidcourseReverificationWindow.objects.filter(course_id=self.course_id)
+        for item in query:
+            if (self.start_date <= item.end_date) and (item.start_date <= self.end_date):
+                raise ValidationError('Reverification windows cannot overlap for a given course.')
 
     @classmethod
     def window_open_for_course(cls, course_id):
